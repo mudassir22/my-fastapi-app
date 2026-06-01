@@ -108,6 +108,44 @@ class TestSumRoute:
         assert response.status_code == 422
 
 
+# ─── Multiply Route ───────────────────────────────────────────────────────────
+
+class TestMultiplyRoute:
+    def test_multiply_status_code(self):
+        response = client.get("/multiply?a=3&b=4")
+        assert response.status_code == 200
+
+    def test_multiply_correct_result(self):
+        response = client.get("/multiply?a=3&b=4")
+        assert response.json() == {"multiply": 12}
+
+    def test_multiply_by_zero(self):
+        response = client.get("/multiply?a=5&b=0")
+        assert response.json() == {"multiply": 0}
+
+    def test_multiply_negative_numbers(self):
+        response = client.get("/multiply?a=-3&b=4")
+        assert response.json() == {"multiply": -12}
+
+    def test_multiply_two_negatives(self):
+        response = client.get("/multiply?a=-3&b=-4")
+        assert response.json() == {"multiply": 12}
+
+    def test_multiply_large_numbers(self):
+        response = client.get("/multiply?a=1000&b=2000")
+        assert response.json() == {"multiply": 2000000}
+
+    def test_multiply_missing_param_returns_422(self):
+        """Omitting a required query param should return 422."""
+        response = client.get("/multiply?a=5")
+        assert response.status_code == 422
+
+    def test_multiply_invalid_param_type_returns_422(self):
+        """Non-integer query params should return 422."""
+        response = client.get("/multiply?a=foo&b=bar")
+        assert response.status_code == 422
+
+
 # ─── 404 / Unknown Routes ─────────────────────────────────────────────────────
 
 class TestUnknownRoutes:

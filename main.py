@@ -15,4 +15,8 @@ def get_item(item_id: int):
 def sum(a: int, b: int):
     return {"sum": a + b}
 
+@app.get("/multiply")
+def multiply(a: int, b: int):
+    return {"multiply": a * b}
+
 handler = Mangum(app)
