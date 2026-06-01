@@ -74,6 +74,40 @@ class TestItemsRoute:
         assert response.json()["item_id"] == 0
 
 
+# ─── Sum Route ────────────────────────────────────────────────────────────────
+
+class TestSumRoute:
+    def test_sum_status_code(self):
+        response = client.get("/sum?a=2&b=3")
+        assert response.status_code == 200
+
+    def test_sum_correct_result(self):
+        response = client.get("/sum?a=4&b=6")
+        assert response.json() == {"sum": 10}
+
+    def test_sum_negative_numbers(self):
+        response = client.get("/sum?a=-5&b=3")
+        assert response.json() == {"sum": -2}
+
+    def test_sum_zeros(self):
+        response = client.get("/sum?a=0&b=0")
+        assert response.json() == {"sum": 0}
+
+    def test_sum_large_numbers(self):
+        response = client.get("/sum?a=1000000&b=2000000")
+        assert response.json() == {"sum": 3000000}
+
+    def test_sum_missing_param_returns_422(self):
+        """Omitting a required query param should return 422."""
+        response = client.get("/sum?a=5")
+        assert response.status_code == 422
+
+    def test_sum_invalid_param_type_returns_422(self):
+        """Non-integer query params should return 422."""
+        response = client.get("/sum?a=foo&b=bar")
+        assert response.status_code == 422
+
+
 # ─── 404 / Unknown Routes ─────────────────────────────────────────────────────
 
 class TestUnknownRoutes:
