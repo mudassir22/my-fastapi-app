@@ -13,6 +13,6 @@ def get_item(item_id: int):
 
 @app.get("/sum")
 def sum(a: int, b: int):
-    return {"sum": a * b}
+    return {"sum": a + b}
 
 handler = Mangum(app)
